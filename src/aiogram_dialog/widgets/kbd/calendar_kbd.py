@@ -1,5 +1,5 @@
 from calendar import monthcalendar
-from datetime import date
+from datetime import date,timedelta,datetime
 from time import mktime
 from typing import Awaitable, Callable, Dict, List, TypedDict, Union
 
@@ -46,12 +46,14 @@ class Calendar(Keyboard):
             id: str,
             min_date: date = date.min,
             max_date: date = date.max,
+            offsetlimit: int = 2,
             on_click: Union[OnDateSelected, WidgetEventProcessor, None] = None,
             when: WhenCondition = None,
     ):
         super().__init__(id=id, when=when)
         self.min_date = min_date
         self.max_date = max_date
+        self.offsetlimit = offsetlimit
         self.on_click = ensure_event_processor(on_click)
 
     async def _render_keyboard(
@@ -189,7 +191,7 @@ class Calendar(Keyboard):
         for week in monthcalendar(offset.year, offset.month):
             week_row = []
             for day in week:
-                if day == 0 or not self.min_date <= date(offset.year, offset.month, day) <= self.max_date:
+                if day == 0 or not self.min_date <= date(offset.year, offset.month, day) <= self.max_date or not (datetime.now()+timedelta(days=self.offsetlimit)).date() <= date(offset.year, offset.month, day):
                     week_row.append(
                         InlineKeyboardButton(
                             text=" ",
