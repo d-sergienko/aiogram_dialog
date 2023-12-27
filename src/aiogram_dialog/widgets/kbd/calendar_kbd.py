@@ -191,7 +191,7 @@ class Calendar(Keyboard):
         for week in monthcalendar(offset.year, offset.month):
             week_row = []
             for day in week:
-                if day == 0 or not self.min_date <= date(offset.year, offset.month, day) <= self.max_date or not (datetime.now()+timedelta(days=self.offsetlimit)) <= date(offset.year, offset.month, day):
+                if day == 0 or not self.min_date <= date(offset.year, offset.month, day) <= self.max_date or not (datetime.now()+timedelta(days=self.offsetlimit)).date() <= date(offset.year, offset.month, day):
                     week_row.append(
                         InlineKeyboardButton(
                             text=" ",
